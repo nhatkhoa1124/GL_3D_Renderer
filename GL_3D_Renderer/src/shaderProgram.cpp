@@ -1,8 +1,9 @@
-#include "shaderProgram.h"
-
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
+#include "core.h"
+#include "shaderProgram.h"
 
 ShaderProgram::ShaderProgram(const std::string& vsPath, const std::string& fsPath)
 {
@@ -65,7 +66,7 @@ std::string ShaderProgram::loadShaderSource(const std::string& shaderPath)
 	return buffer.str();
 }
 
-const void ShaderProgram::useProgram()
+void ShaderProgram::useProgram()
 {
 	glUseProgram(mShaderId);
 }

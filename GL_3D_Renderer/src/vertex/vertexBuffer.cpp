@@ -9,13 +9,13 @@ namespace Vertex {
 
 	VertexBuffer::~VertexBuffer() {}
 
-	const void VertexBuffer::bindVertexBuffer(const std::vector<VertexData>& vertices)
+	void VertexBuffer::bindVertexBuffer(const std::vector<VertexData>& vertices) const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 	}
 
-	const void VertexBuffer::deleteVertexBuffer()
+	void VertexBuffer::deleteVertexBuffer() const
 	{
 		glDeleteBuffers(1, &mVBO);
 	}

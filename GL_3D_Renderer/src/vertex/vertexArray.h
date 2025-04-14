@@ -7,9 +7,9 @@ namespace Vertex {
 	public:
 		VertexArray();
 		~VertexArray();
-		const void bindVertexArray(GLuint vbo);
-		const void deleteVertexArray();
-		inline const GLuint getVertexArrayObject() { return mVAO; };
+		void bindVertexArray(GLuint vbo) const;
+		void deleteVertexArray() const;
+		inline GLuint getVertexArrayObject() const { return mVAO; };
 	private:
 		GLuint mVAO;
 	};

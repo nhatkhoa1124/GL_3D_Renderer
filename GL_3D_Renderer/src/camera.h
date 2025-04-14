@@ -1,7 +1,5 @@
 #pragma once
 
-#include "core.h"
-
 class Camera {
 public:
 	Camera(glm::vec3 startPos);
@@ -9,7 +7,7 @@ public:
 	void processCameraMovement(float xOffset, float yOffset);
 	void processKeyboard(GLFWwindow* window, float deltaTime);
 	void updateCamera();
-	inline const glm::mat4 getViewMatrix() { return glm::lookAt(mPos, mPos + mFront, mUp); };
+	inline glm::mat4 getViewMatrix() const { return glm::lookAt(mPos, mPos + mFront, mUp); };
 private:
 	glm::vec3 mPos;
 	glm::vec3 mUp;

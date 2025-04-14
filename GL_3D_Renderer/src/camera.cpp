@@ -1,16 +1,21 @@
+#include <iostream>
+
+#include "core.h"
 #include "camera.h"
+
 
 Camera::Camera(glm::vec3 startPos) :
 	mPos{ startPos },
 	worldUp{ glm::vec3(0.0f, 1.0f, 0.0f) },
 	mYaw{ -90.0f },
 	mPitch{ 0.0f },
-	mMoveSpeed{ 5.0f },
+	mMoveSpeed{ 4.0f },
 	mMouseSens{ 0.05f },
 	mUp{ glm::vec3(0.0f, 1.0f, 0.0f) },
 	mFront{ glm::vec3(0.0f, 0.0f, -1.0f) },
 	mRight{ glm::vec3(1.0f, 0.0f, 0.0f) }
 {
+	updateCamera();
 }
 
 Camera::~Camera() {}
@@ -24,7 +29,7 @@ void Camera::processCameraMovement(float xOffset, float yOffset)
 	mPitch += yOffset;
 
 	if (mPitch > 89.0f) {
-		mYaw = 89.0f;
+		mPitch = 89.0f;
 	}
 	if (mPitch < -89.0f) {
 		mPitch = 89.0f;

@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\GL_3D_Renderer\src\model;$(SolutionDir)\GL_3D_Renderer\src;$(SolutionDir)\GL_3D_Renderer\src\vertex;$(SolutionDir)\GL_3D_Renderer\src\shaders;$(SolutionDir)\GL_3D_Renderer\dependencies\glm\glm;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(SolutionDir)\GL_3D_Renderer\dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\GL_3D_Renderer\dependencies\stb;$(SolutionDir)\GL_3D_Renderer\src\model;$(SolutionDir)\GL_3D_Renderer\src;$(SolutionDir)\GL_3D_Renderer\src\vertex;$(SolutionDir)\GL_3D_Renderer\src\shaders;$(SolutionDir)\GL_3D_Renderer\dependencies\glm\glm;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(SolutionDir)\GL_3D_Renderer\src\resource;$(SolutionDir)\GL_3D_Renderer\dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -134,6 +134,7 @@
     <ClCompile Include="dependencies\glad\src\glad.c" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\model\mesh.cpp" />
+    <ClCompile Include="src\resource\texture.cpp" />
     <ClCompile Include="src\shaderProgram.cpp" />
     <ClCompile Include="src\model\transform.cpp" />
     <ClCompile Include="src\vertex\vertexArray.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="src\model\mesh.h" />
+    <ClInclude Include="src\resource\texture.h" />
     <ClInclude Include="src\shaderProgram.h" />
     <ClInclude Include="src\model\transform.h" />
     <ClInclude Include="src\vertex\vertex.h" />
@@ -154,7 +156,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\fragmentShader.frag" />
+    <None Include="src\shaders\phong.frag" />
     <None Include="src\shaders\vertexShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\cobblestone.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

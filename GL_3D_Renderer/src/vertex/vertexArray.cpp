@@ -9,7 +9,7 @@ namespace Vertex {
 
 	VertexArray::~VertexArray() {}
 
-	const void VertexArray::bindVertexArray(GLuint vbo)
+	void VertexArray::bindVertexArray(GLuint vbo) const
 	{
 		glBindVertexArray(mVAO);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -26,7 +26,7 @@ namespace Vertex {
 		glEnableVertexAttribArray(3);
 	}
 
-	const void VertexArray::deleteVertexArray() {
+	void VertexArray::deleteVertexArray() const {
 		glDeleteVertexArrays(1, &mVAO);
 	}
 

@@ -1,40 +1,47 @@
 #include "core.h"
+
 #include "scene.h"
 #include "vertex.h"
 #include "vertexBuffer.h"
 #include "vertexArray.h"
 #include "shaderProgram.h"
 #include "camera.h"
+#include "texture.h"
 
 void mouse_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 Camera* gCamera = nullptr;
 
 int main() {
+	// Initalize
 	SceneManager::Scene scene = {};
 	scene.init();
 
+	// VBO & VAO
 	Vertex::VertexBuffer VertexBuffer = {};
 	Vertex::VertexArray VertexArray = {};
 	VertexBuffer.bindVertexBuffer(Vertex::rawCube);
 	VertexArray.bindVertexArray(VertexBuffer.getVertexBufferObject());
 
+	// Setup Shaders
 	std::string vertexShaderPath = "src/shaders/vertexShader.vert";
 	std::string fragmentShaderPath = "src/shaders/fragmentShader.frag";
 	ShaderProgram shaderProgram = { vertexShaderPath , fragmentShaderPath };
 	shaderProgram.useProgram();
 
-	Camera camera = { glm::vec3(1.0f, 0.3f, 4.0f) };
+	// Setup Camera
+	Camera camera = { glm::vec3(0.0f, 0.0f, 3.0f) };
 	gCamera = &camera;
 	float deltaTime = 0.02f;
-
-	glfwSetInputMode(scene.mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(scene.mWindow, mouse_callback);
+
+	// Load Textures
+	Texture texture = {};
+	texture.loadTexture("assets/cobblestone.png");
 
 	// Temporary matrices
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(scene.WINDOW_WIDTH) / static_cast<float>(scene.WINDOW_HEIGHT), 0.1f, 100.0f);
 	GLuint mvpLoc = glGetUniformLocation(shaderProgram.getProgramId(), "mvp");
 
 	while (!glfwWindowShouldClose(scene.mWindow))
@@ -53,6 +60,7 @@ int main() {
 		glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 		shaderProgram.useProgram();
+		texture.bindTexture();
 		VertexArray.bindVertexArray(VertexBuffer.getVertexBufferObject());
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -67,8 +75,8 @@ int main() {
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	static bool firstMouse = true;
-	static float lastX = 400.0f;
-	static float lastY = 300.0f;
+	static float lastX;
+	static float lastY;
 
 	if (firstMouse) {
 		lastX = xpos;

@@ -1,3 +1,6 @@
+#include <iostream>
+
+#include "core.h"
 #include "scene.h"
 
 namespace SceneManager {
@@ -32,6 +35,7 @@ namespace SceneManager {
 		}
 
 		glEnable(GL_DEPTH_TEST);
+		glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
 	void Scene::update() {

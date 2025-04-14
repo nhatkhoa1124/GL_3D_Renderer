@@ -7,9 +7,9 @@ namespace Vertex {
 	public:
 		VertexBuffer();
 		~VertexBuffer();
-		const void bindVertexBuffer(const std::vector<VertexData>& vertices);
-		const void deleteVertexBuffer();
-		inline const GLuint getVertexBufferObject() { return mVBO; };
+		void bindVertexBuffer(const std::vector<VertexData>& vertices)const;
+		void deleteVertexBuffer()const;
+		inline GLuint getVertexBufferObject() const { return mVBO; };
 	private:
 		GLuint mVBO;
 	};
