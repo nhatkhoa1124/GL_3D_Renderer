@@ -1,6 +1,5 @@
 #include "vertexBuffer.h"
 
-
 namespace Vertex {
 	VertexBuffer::VertexBuffer()
 	{
@@ -19,5 +18,4 @@ namespace Vertex {
 	{
 		glDeleteBuffers(1, &mVBO);
 	}
-
 }

@@ -7,6 +7,7 @@ public:
 	void processCameraMovement(float xOffset, float yOffset);
 	void processKeyboard(GLFWwindow* window, float deltaTime);
 	void updateCamera();
+	inline glm::vec3 getPos() const { return mPos; };
 	inline glm::mat4 getViewMatrix() const { return glm::lookAt(mPos, mPos + mFront, mUp); };
 private:
 	glm::vec3 mPos;

@@ -32,7 +32,7 @@ void Camera::processCameraMovement(float xOffset, float yOffset)
 		mPitch = 89.0f;
 	}
 	if (mPitch < -89.0f) {
-		mPitch = 89.0f;
+		mPitch = -89.0f;
 	}
 
 	updateCamera();
@@ -48,13 +48,13 @@ void Camera::processKeyboard(GLFWwindow* window, float deltaTime)
 		mPos += mFront * velocity;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		mPos += mRight * velocity;
+		mPos -= mRight * velocity;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		mPos -= mFront * velocity;
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		mPos -= mRight * velocity;
+		mPos += mRight * velocity;
 	}
 }
 
@@ -67,6 +67,6 @@ void Camera::updateCamera()
 
 	mFront = glm::normalize(look);
 	mRight = glm::normalize(glm::cross(mFront, worldUp));
-	mUp = glm::normalize(glm::cross(mFront, mRight));
+	mUp = glm::normalize(glm::cross(mRight, mFront));
 
 }
