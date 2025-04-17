@@ -73,7 +73,6 @@ int main() {
 		shaderProgram.setUniformFloat(1.0f, "material.specularStrength");
 		shaderProgram.setUniformFloat(32.0f, "material.shininess");
 
-
 		shaderProgram.useProgram();
 		texture.bindTexture();
 		VertexArray.bindVertexArray(VertexBuffer.getVertexBufferObject());

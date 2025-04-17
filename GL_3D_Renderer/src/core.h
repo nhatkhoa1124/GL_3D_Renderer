@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <assimp/anim.h>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>

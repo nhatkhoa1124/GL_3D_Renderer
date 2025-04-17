@@ -104,14 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\GL_3D_Renderer\dependencies\stb;$(SolutionDir)\GL_3D_Renderer\src\model;$(SolutionDir)\GL_3D_Renderer\src;$(SolutionDir)\GL_3D_Renderer\src\vertex;$(SolutionDir)\GL_3D_Renderer\src\shaders;$(SolutionDir)\GL_3D_Renderer\dependencies\glm\glm;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(SolutionDir)\GL_3D_Renderer\src\resource;$(SolutionDir)\GL_3D_Renderer\dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\GL_3D_Renderer\dependencies\assimp\include;$(SolutionDir)\GL_3D_Renderer\dependencies\stb;$(SolutionDir)\GL_3D_Renderer\src\model;$(SolutionDir)\GL_3D_Renderer\src;$(SolutionDir)\GL_3D_Renderer\src\vertex;$(SolutionDir)\GL_3D_Renderer\src\shaders;$(SolutionDir)\GL_3D_Renderer\dependencies\glm\glm;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(SolutionDir)\GL_3D_Renderer\src\resource;$(SolutionDir)\GL_3D_Renderer\dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Tin\Personal\Cpp Projects\OpenGL\GL_3D_Renderer\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\GL_3D_Renderer\dependencies\assimp\lib;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
