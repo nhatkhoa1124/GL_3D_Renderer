@@ -3,7 +3,7 @@
 class Texture {
 public:
 	Texture();
-	~Texture();
+	~Texture() = default;
 	void loadTexture(const char* texPath);
 	inline void destroyTexture() const { glDeleteTextures(1, &mTextureId); };
 	inline void bindTexture() const { glBindTexture(GL_TEXTURE_2D, mTextureId); };

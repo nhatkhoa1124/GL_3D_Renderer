@@ -5,11 +5,28 @@
 class ShaderProgram {
 public:
 	ShaderProgram(const std::string& vsPath, const std::string& fsPath);
-	~ShaderProgram();
-	std::string loadShaderSource(const std::string& shaderPath);
+	~ShaderProgram() = default;
 	void useProgram();
 	inline GLuint getProgramId()  const { return mShaderId; };
 
+	inline void setUniformInt(const int value, const char* uniformName) const
+	{
+		GLuint location = glGetUniformLocation(mShaderId, uniformName);
+		if (location == (GLuint)-1) {
+			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
+			return;
+		}
+		glUniform1i(location, value);
+	};
+	inline void setUniformFloat(const float value, const char* uniformName) const
+	{
+		GLuint location = glGetUniformLocation(mShaderId, uniformName);
+		if (location == (GLuint)-1) {
+			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
+			return;
+		}
+		glUniform1f(location, value);
+	};
 	inline void setUniformMat4(const glm::mat4& value, const char* uniformName) const
 	{
 		GLuint location = glGetUniformLocation(mShaderId, uniformName);
@@ -28,15 +45,6 @@ public:
 		}
 		glUniform3fv(location, 1, glm::value_ptr(value));
 	};
-	inline void setUniformFloat(const float value, const char* uniformName) const
-	{
-		GLuint location = glGetUniformLocation(mShaderId, uniformName);
-		if (location == (GLuint)-1) {
-			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
-			return;
-		}
-		glUniform1f(location, value);
-	};
 	inline void setMVP(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) const
 	{
 		setUniformMat4(model, "model");
@@ -45,4 +53,6 @@ public:
 	};
 private:
 	GLuint mShaderId;
+
+	std::string loadShaderSource(const std::string& shaderPath);
 };

@@ -113,6 +113,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)\GL_3D_Renderer\dependencies\assimp\lib;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y /E /I "$(SolutionDir)GL_3D_Renderer\" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -134,6 +137,7 @@
     <ClCompile Include="dependencies\glad\src\glad.c" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\model\mesh.cpp" />
+    <ClCompile Include="src\model\model.cpp" />
     <ClCompile Include="src\resource\texture.cpp" />
     <ClCompile Include="src\shaderProgram.cpp" />
     <ClCompile Include="src\model\transform.cpp" />
@@ -146,6 +150,7 @@
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="src\model\mesh.h" />
+    <ClInclude Include="src\model\model.h" />
     <ClInclude Include="src\resource\texture.h" />
     <ClInclude Include="src\shaderProgram.h" />
     <ClInclude Include="src\model\transform.h" />

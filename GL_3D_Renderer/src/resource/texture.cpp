@@ -7,8 +7,6 @@
 
 Texture::Texture() {}
 
-Texture::~Texture() {}
-
 void Texture::loadTexture(const char* texPath)
 {
 	int width, height, nrChannels;

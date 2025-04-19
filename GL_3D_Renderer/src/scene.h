@@ -4,8 +4,8 @@ namespace SceneManager {
 	class Scene {
 	public:
 		GLFWwindow* mWindow;
-		const GLint WINDOW_WIDTH = 800;
-		const GLint WINDOW_HEIGHT = 600;
+		static constexpr GLint WINDOW_WIDTH = 800;
+		static constexpr GLint WINDOW_HEIGHT = 600;
 
 		Scene();
 		~Scene();

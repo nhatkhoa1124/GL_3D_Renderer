@@ -18,8 +18,6 @@ Camera::Camera(glm::vec3 startPos) :
 	updateCamera();
 }
 
-Camera::~Camera() {}
-
 void Camera::processCameraMovement(float xOffset, float yOffset)
 {
 	xOffset *= mMouseSens;

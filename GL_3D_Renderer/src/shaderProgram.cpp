@@ -51,8 +51,6 @@ ShaderProgram::ShaderProgram(const std::string& vsPath, const std::string& fsPat
 	glDeleteShader(fragmentShader);
 };
 
-ShaderProgram::~ShaderProgram() {}
-
 std::string ShaderProgram::loadShaderSource(const std::string& shaderPath)
 {
 	std::ifstream file{ shaderPath };
