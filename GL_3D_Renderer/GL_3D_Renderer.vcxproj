@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\GL_3D_Renderer\dependencies\assimp\include;$(SolutionDir)\GL_3D_Renderer\dependencies\stb;$(SolutionDir)\GL_3D_Renderer\src\model;$(SolutionDir)\GL_3D_Renderer\src;$(SolutionDir)\GL_3D_Renderer\src\vertex;$(SolutionDir)\GL_3D_Renderer\src\shaders;$(SolutionDir)\GL_3D_Renderer\dependencies\glm\glm;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(SolutionDir)\GL_3D_Renderer\src\resource;$(SolutionDir)\GL_3D_Renderer\dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\GL_3D_Renderer\src\lighting;$(SolutionDir)\GL_3D_Renderer\dependencies\assimp\include;$(SolutionDir)\GL_3D_Renderer\dependencies\stb;$(SolutionDir)\GL_3D_Renderer\src\model;$(SolutionDir)\GL_3D_Renderer\src;$(SolutionDir)\GL_3D_Renderer\src\vertex;$(SolutionDir)\GL_3D_Renderer\src\shaders;$(SolutionDir)\GL_3D_Renderer\dependencies\glm\glm;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(SolutionDir)\GL_3D_Renderer\src\resource;$(SolutionDir)\GL_3D_Renderer\dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -114,7 +114,8 @@
       <AdditionalDependencies>glfw3.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /E /I "$(SolutionDir)GL_3D_Renderer\" "$(OutDir)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,6 +137,9 @@
   <ItemGroup>
     <ClCompile Include="dependencies\glad\src\glad.c" />
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\lighting\directionalLight.cpp" />
+    <ClCompile Include="src\lighting\pointLight.cpp" />
+    <ClCompile Include="src\lighting\spotLight.cpp" />
     <ClCompile Include="src\model\mesh.cpp" />
     <ClCompile Include="src\model\model.cpp" />
     <ClCompile Include="src\resource\texture.cpp" />
@@ -149,6 +153,10 @@
   <ItemGroup>
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\core.h" />
+    <ClInclude Include="src\lighting\directionalLight.h" />
+    <ClInclude Include="src\lighting\light.h" />
+    <ClInclude Include="src\lighting\pointLight.h" />
+    <ClInclude Include="src\lighting\spotLight.h" />
     <ClInclude Include="src\model\mesh.h" />
     <ClInclude Include="src\model\model.h" />
     <ClInclude Include="src\resource\texture.h" />

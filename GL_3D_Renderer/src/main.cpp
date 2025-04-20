@@ -9,6 +9,8 @@
 #include "texture.h"
 #include "model.h"
 #include "stb_image.h"
+#include "directionalLight.h"
+#include "pointLight.h"
 
 void mouse_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -20,10 +22,17 @@ int main() {
 
 	// Setup Shaders
 	std::string vertexShaderPath = "src/shaders/vertexShader.vert";
-	std::string fragmentShaderPath = "src/shaders/fragmentShader.frag";
+	std::string fragmentShaderPath = "src/shaders/phong.frag";
 	ShaderProgram shaderProgram = { vertexShaderPath , fragmentShaderPath };
 	shaderProgram.useProgram();
 
+	// Setup lighting
+	DirectionalLight dirLight = { glm::vec3(1.0f) };
+	dirLight.setColor(glm::vec3(0.2f, 0.5f, 0.7f));
+	std::vector<PointLight> pointLights = {
+		{glm::vec3(1.0f, 6.0f, 0.0f), 1.0f, 0.045f, 0.0075f} ,
+		{glm::vec3(0.0f, 0.0f, 2.0f), 1.0f, 0.045f, 0.0075f}
+	};
 
 	// Setup Camera
 	Camera camera = { glm::vec3(0.0f, 0.0f, 6.0f) };
@@ -32,7 +41,8 @@ int main() {
 	glfwSetCursorPosCallback(scene.mWindow, mouse_callback);
 
 	// Load model
-	Vertex::Model model = { "assets/backpack/backpack.obj" };
+	Model::Model dragon = { "assets/fbx/Dragon 2.5_fbx.fbx", false };
+	Model::Model backpack = { "assets/backpack/backpack.obj", true };
 
 
 	while (!glfwWindowShouldClose(scene.mWindow))
@@ -47,25 +57,38 @@ int main() {
 
 		shaderProgram.useProgram();
 
+		// Process lighting
+		dirLight.setShaderLight(shaderProgram, "dirLight");
+		for (size_t i = 0; i < pointLights.size(); i++)
+		{
+			std::string idx = "pointLight[" + std::to_string(i) + "]";
+			glm::mat4 pointLightModel = glm::mat4(1.0f);
+			pointLightModel = glm::rotate(pointLightModel, glm::radians(3.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::vec4 newPos = glm::vec4(pointLights[i].getPosition(), 1.0f) * pointLightModel;
+			pointLights[i].setPosition(glm::vec3(newPos));
+			pointLights[i].setShaderLight(shaderProgram, idx.c_str());
+		}
+		shaderProgram.setUniformVec3(camera.getPos(), "viewPos");
+		shaderProgram.setUniformVec3(glm::vec3(0.05f), "phongIntensity.ambient");
+		shaderProgram.setUniformVec3(glm::vec3(0.8f), "phongIntensity.diffuse");
+		shaderProgram.setUniformVec3(glm::vec3(1.0f), "phongIntensity.specular");
 
 		// Process camera
 		camera.processKeyboard(scene.mWindow, deltaTime);
-
-
 		// Process matrices and transformation
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(1.0f, 1.0f, 1.0f));
-		glm::mat4 projectionMatrix = glm::perspective(glm::radians(50.0f), static_cast<float>(scene.WINDOW_WIDTH) / static_cast<float>(scene.WINDOW_HEIGHT), 0.1f, 100.0f);
+		glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(scene.WINDOW_WIDTH) / static_cast<float>(scene.WINDOW_HEIGHT), 0.1f, 100.0f);
 		glm::mat4 viewMatrix = camera.getViewMatrix();
-
 		shaderProgram.setMVP(modelMatrix, viewMatrix, projectionMatrix);
+		backpack.drawModel(shaderProgram);
 
-
-		// Process lighting (if applicable)
-
-		model.drawModel(shaderProgram);
-
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 3.0f, -4.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f, 0.1f, 0.1f));
+		shaderProgram.setMVP(modelMatrix, viewMatrix, projectionMatrix);
+		dragon.drawModel(shaderProgram);
 
 		scene.update();
 	}

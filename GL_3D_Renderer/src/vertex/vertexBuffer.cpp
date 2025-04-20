@@ -1,6 +1,6 @@
 #include "vertexBuffer.h"
 
-namespace Vertex {
+namespace Model {
 	VertexBuffer::VertexBuffer()
 	{
 		glGenBuffers(1, &mVBO);

@@ -1,6 +1,6 @@
 #include "vertexArray.h"
 
-namespace Vertex {
+namespace Model {
 
 	VertexArray::VertexArray()
 	{

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core.h"
 #include <iostream>
 
 class ShaderProgram {

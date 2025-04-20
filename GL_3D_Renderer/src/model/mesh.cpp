@@ -4,7 +4,7 @@
 #include "vertexArray.h"
 #include "vertexBuffer.h"
 
-namespace Vertex {
+namespace Model {
 	Mesh::Mesh(std::vector<VertexData> vertices, std::vector<uint32_t> indices, std::vector<TextureData> textures) :
 		mVertices{ vertices },
 		mIndices{ indices },

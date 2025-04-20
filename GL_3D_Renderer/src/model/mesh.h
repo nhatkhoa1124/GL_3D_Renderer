@@ -3,7 +3,7 @@
 #include "vertex.h"
 #include "shaderProgram.h"
 
-namespace Vertex {
+namespace Model {
 	class Mesh {
 	public:
 		Mesh(std::vector<VertexData> vertices, std::vector<uint32_t> indices, std::vector<TextureData> textures);

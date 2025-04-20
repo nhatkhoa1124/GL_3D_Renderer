@@ -2,7 +2,7 @@
 
 #include "vertex.h"
 
-namespace Vertex {
+namespace Model {
 	class VertexArray {
 	public:
 		VertexArray();

@@ -5,17 +5,23 @@ in vec2 TexCoord;
 
 struct Material {
     sampler2D texture_diffuse1;
+    sampler2D texture_diffuse2;
     sampler2D texture_specular1;
+    sampler2D texture_specular2;
 };
 
 uniform Material material;
 
 void main()
 {    
-    vec4 diffuseColor = texture(material.texture_diffuse1, TexCoord);
-    vec4 specularColor = texture(material.texture_specular1, TexCoord); 
+    vec3 diffuse = (texture(material.texture_diffuse1, TexCoord) + texture(material.texture_diffuse2, TexCoord)).rgb;
+    vec3 specular = (texture(material.texture_specular1, TexCoord) + texture(material.texture_specular2, TexCoord)).rgb;
 
-    // Just add them to make OpenGL happy (you can replace with real lighting later)
-    FragColor = diffuseColor + specularColor;
+    // Combine diffuse textures (average)
+    vec3 combinedDiffuse = diffuse* 0.5;
 
+    // Combine specular textures (average, with smaller influence)
+    vec3 combinedSpecular = specular * 0.005;
+
+    FragColor = vec4(combinedDiffuse + combinedSpecular,1.0);
 }

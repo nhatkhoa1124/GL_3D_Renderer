@@ -5,7 +5,7 @@
 #include "assimp/postprocess.h"
 #include "stb_image.h"
 
-namespace Vertex {
+namespace Model {
 	void checkGLError(const char* functionName) {
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR) {
@@ -13,11 +13,11 @@ namespace Vertex {
 		}
 	}
 
-	GLuint TextureFromFile(const char* path, const std::string& directory, bool gamma = false)
+	GLuint TextureFromFile(const char* path, const std::string& directory, bool setFlipTexture = false, bool gamma = false)
 	{
 		std::string filename = std::string(path);
 		filename = directory + '/' + filename;
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(setFlipTexture);
 
 		unsigned int textureID;
 		glGenTextures(1, &textureID);
@@ -54,7 +54,8 @@ namespace Vertex {
 		return textureID;
 	}
 
-	Model::Model(const std::string& path)
+	Model::Model(const std::string& path, bool flipTexture) :
+		mFlipTexture{ flipTexture }
 	{
 		std::cout << "Loading model from: " << path << std::endl;
 		loadModel(path);
@@ -119,15 +120,11 @@ namespace Vertex {
 			vector.z = mesh->mVertices[i].z;
 			vertex.position = vector;
 
-			if (mesh->mNormals) {
-				vector.x = mesh->mNormals[i].x;
-				vector.y = mesh->mNormals[i].y;
-				vector.z = mesh->mNormals[i].z;
-				vertex.normal = vector;
-			}
-			else {
-				std::cerr << "Warning: Normals not found for mesh." << std::endl;
-			}
+			vector.x = mesh->mNormals[i].x;
+			vector.y = mesh->mNormals[i].y;
+			vector.z = mesh->mNormals[i].z;
+			vertex.normal = vector;
+
 
 			if (mesh->mTextureCoords[0]) {
 				glm::vec2 vec;
@@ -196,7 +193,7 @@ namespace Vertex {
 			if (!skip)
 			{
 				TextureData texture;
-				texture.id = TextureFromFile(str.C_Str(), mDirectory);
+				texture.id = TextureFromFile(str.C_Str(), mDirectory, mFlipTexture);
 				texture.type = typeName;
 				texture.path = str.C_Str();
 				textures.push_back(texture);
