@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -104,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\GL_3D_Renderer\src\lighting;$(SolutionDir)\GL_3D_Renderer\dependencies\assimp\include;$(SolutionDir)\GL_3D_Renderer\dependencies\stb;$(SolutionDir)\GL_3D_Renderer\src\model;$(SolutionDir)\GL_3D_Renderer\src;$(SolutionDir)\GL_3D_Renderer\src\vertex;$(SolutionDir)\GL_3D_Renderer\src\shaders;$(SolutionDir)\GL_3D_Renderer\dependencies\glm\glm;$(SolutionDir)\GL_3D_Renderer\dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(SolutionDir)\GL_3D_Renderer\src\resource;$(SolutionDir)\GL_3D_Renderer\dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)dependencies\imgui;$(ProjectDir)src\GUI;$(ProjectDir)src\lighting;$(ProjectDir)dependencies\assimp\include;$(ProjectDir)dependencies\stb;$(ProjectDir)src\model;$(ProjectDir)src;$(ProjectDir)src\vertex;$(ProjectDir)src\shaders;$(ProjectDir)dependencies\glm\glm;$(ProjectDir)dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(ProjectDir)src\resource;$(ProjectDir)dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -136,7 +139,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dependencies\glad\src\glad.c" />
+    <ClCompile Include="dependencies\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="dependencies\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui_demo.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui_draw.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui_tables.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\GUI\gui.cpp" />
+    <ClCompile Include="src\GUI\lightingGui.cpp" />
+    <ClCompile Include="src\GUI\modelGui.cpp" />
     <ClCompile Include="src\lighting\directionalLight.cpp" />
     <ClCompile Include="src\lighting\pointLight.cpp" />
     <ClCompile Include="src\lighting\spotLight.cpp" />
@@ -151,8 +164,15 @@
     <ClCompile Include="src\scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="dependencies\imgui\imgui.h" />
+    <ClInclude Include="dependencies\imgui\imgui_internal.h" />
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\core.h" />
+    <ClInclude Include="src\GUI\gui.h" />
+    <ClInclude Include="src\GUI\lightingGui.h" />
+    <ClInclude Include="src\GUI\modelGui.h" />
     <ClInclude Include="src\lighting\directionalLight.h" />
     <ClInclude Include="src\lighting\light.h" />
     <ClInclude Include="src\lighting\pointLight.h" />

@@ -5,13 +5,7 @@
 class PointLight : public Light
 {
 public:
-	PointLight(const glm::vec3& position, const float constant, const float linear, const float quadratic) :
-		mPosition{ position },
-		mConstant{ constant },
-		mLinear{ linear },
-		mQuadratic{ quadratic }
-	{
-	};
+	PointLight(const glm::vec3& position, const float constant, const float linear, const float quadratic);
 
 	inline void setPosition(const glm::vec3& position) { mPosition = position; };
 	inline void setAttenuation(const float constant, const float linear, const float quadratic)

@@ -1,6 +1,11 @@
 #include "directionalLight.h"
 #include "shaderProgram.h"
 
+DirectionalLight::DirectionalLight(const glm::vec3 direction) :
+	mDirection{ direction }
+{
+	mType = LightType::DIRECTIONAL;
+};
 
 void DirectionalLight::setShaderLight(ShaderProgram& shader, const char* uniformName) const
 {

@@ -1,6 +1,15 @@
 #include "spotLight.h"
 #include "shaderProgram.h"
 
+SpotLight::SpotLight(const glm::vec3& position, const glm::vec3& spotDirection, const float innerCutOff, const float outerCutOff) :
+	mPosition{ position },
+	mSpotDirection{ spotDirection },
+	mInnerCutOff{ innerCutOff },
+	mOuterCutOff{ outerCutOff }
+{
+	mType = LightType::SPOT;
+};
+
 void SpotLight::setShaderLight(ShaderProgram& shader, const char* uniformName) const
 {
 	std::string base = std::string(uniformName);

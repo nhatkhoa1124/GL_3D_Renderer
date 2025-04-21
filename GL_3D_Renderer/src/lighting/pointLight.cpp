@@ -1,6 +1,14 @@
 #include "pointLight.h"
 #include "shaderProgram.h"
 
+PointLight::PointLight(const glm::vec3& position, const float constant, const float linear, const float quadratic) :
+	mPosition{ position },
+	mConstant{ constant },
+	mLinear{ linear },
+	mQuadratic{ quadratic }
+{
+	mType = LightType::POINT;
+};
 
 void PointLight::setShaderLight(ShaderProgram& shader, const char* uniformName) const
 {

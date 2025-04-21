@@ -5,7 +5,7 @@
 class DirectionalLight : public Light
 {
 public:
-	DirectionalLight(const glm::vec3 direction) : mDirection{ direction } {};
+	DirectionalLight(const glm::vec3 direction);
 
 	inline void setDirection(const glm::vec3& direction) { mDirection = direction; };
 	inline glm::vec3 getDirection() const { return mDirection; };
