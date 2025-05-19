@@ -87,6 +87,9 @@
     <ClCompile Include="src\GUI\modelGui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\buffer\frameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\scene.h">
@@ -155,11 +158,15 @@
     <ClInclude Include="src\GUI\modelGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\buffer\frameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\fragmentShader.frag" />
     <None Include="src\shaders\vertexShader.vert" />
     <None Include="src\shaders\phong.frag" />
+    <None Include="src\shaders\transparencyTest.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\cobblestone.png">

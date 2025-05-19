@@ -32,7 +32,7 @@ namespace Model {
 		}
 		glActiveTexture(GL_TEXTURE0);
 
-		// draw mesh
+		// Draw mesh
 		glBindVertexArray(mVAO);
 		glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);

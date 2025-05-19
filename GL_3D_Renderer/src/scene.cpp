@@ -4,22 +4,22 @@
 #include "scene.h"
 #include "gui.h"
 
-namespace SceneManager {
-	Scene::Scene() { mWindow = nullptr; }
+namespace Scene {
 
-	Scene::~Scene() { exit(); }
+	GLFWwindow* mWindow = nullptr;
 
 	static void error_callback(int error, const char* description)
 	{
 		fprintf(stderr, "Error: %s\n", description);
 	}
 
-	void Scene::init() {
+	void init() {
 		glfwSetErrorCallback(error_callback);
 
 		if (!glfwInit()) {
 			std::cerr << "FAILED TO INITALIZE GLFW\n";
 			glfwTerminate();
+			return;
 		}
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -34,17 +34,17 @@ namespace SceneManager {
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			std::cerr << "FAILED TO INITIALIZE GLAD\n";
 		}
-
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
 
 	}
 
-	void Scene::update() {
+	void update() {
 		glfwSwapBuffers(mWindow);
 		glfwPollEvents();
 	}
 
-	void Scene::exit() {
+	void exit() {
 		if (mWindow) {
 			glfwDestroyWindow(mWindow);
 			mWindow = nullptr;

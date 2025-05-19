@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)dependencies\imgui;$(ProjectDir)src\GUI;$(ProjectDir)src\lighting;$(ProjectDir)dependencies\assimp\include;$(ProjectDir)dependencies\stb;$(ProjectDir)src\model;$(ProjectDir)src;$(ProjectDir)src\vertex;$(ProjectDir)src\shaders;$(ProjectDir)dependencies\glm\glm;$(ProjectDir)dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(ProjectDir)src\resource;$(ProjectDir)dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\buffer;$(ProjectDir)dependencies\imgui;$(ProjectDir)src\GUI;$(ProjectDir)src\lighting;$(ProjectDir)dependencies\assimp\include;$(ProjectDir)dependencies\stb;$(ProjectDir)src\model;$(ProjectDir)src;$(ProjectDir)src\vertex;$(ProjectDir)src\shaders;$(ProjectDir)dependencies\glm\glm;$(ProjectDir)dependencies\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;$(ProjectDir)src\resource;$(ProjectDir)dependencies\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -146,6 +146,7 @@
     <ClCompile Include="dependencies\imgui\imgui_draw.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\buffer\frameBuffer.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\GUI\gui.cpp" />
     <ClCompile Include="src\GUI\lightingGui.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="dependencies\imgui\imgui.h" />
     <ClInclude Include="dependencies\imgui\imgui_internal.h" />
+    <ClInclude Include="src\buffer\frameBuffer.h" />
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="src\GUI\gui.h" />
@@ -190,6 +192,7 @@
   <ItemGroup>
     <None Include="src\shaders\fragmentShader.frag" />
     <None Include="src\shaders\phong.frag" />
+    <None Include="src\shaders\transparencyTest.frag" />
     <None Include="src\shaders\vertexShader.vert" />
   </ItemGroup>
   <ItemGroup>

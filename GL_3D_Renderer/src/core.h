@@ -13,3 +13,5 @@
 #include <vector>
 #include <string>
 
+constexpr GLint WINDOW_WIDTH = 1280;
+constexpr GLint WINDOW_HEIGHT = 720;

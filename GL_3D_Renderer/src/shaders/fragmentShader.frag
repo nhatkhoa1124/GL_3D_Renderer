@@ -23,5 +23,5 @@ void main()
     // Combine specular textures (average, with smaller influence)
     vec3 combinedSpecular = specular * 0.005;
 
-    FragColor = vec4(combinedDiffuse + combinedSpecular,1.0);
+    FragColor = vec4(0.06, 0.8, 0.74, 1.0);
 }
