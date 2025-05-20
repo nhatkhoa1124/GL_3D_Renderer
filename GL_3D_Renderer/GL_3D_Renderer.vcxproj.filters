@@ -167,6 +167,8 @@
     <None Include="src\shaders\vertexShader.vert" />
     <None Include="src\shaders\phong.frag" />
     <None Include="src\shaders\transparencyTest.frag" />
+    <None Include="src\shaders\fullscreen.frag" />
+    <None Include="src\shaders\fullscreen.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\cobblestone.png">

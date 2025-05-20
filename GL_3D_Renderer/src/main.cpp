@@ -12,6 +12,7 @@
 #include "directionalLight.h"
 #include "pointLight.h"
 #include "gui.h"
+#include "frameBuffer.h"
 
 void mouse_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -27,6 +28,7 @@ int main() {
 	const std::string vertexShaderPath = "src/shaders/vertexShader.vert";
 	const std::string fragmentShaderPath = "src/shaders/phong.frag";
 	ShaderProgram shaderProgram = { vertexShaderPath , fragmentShaderPath };
+	ShaderProgram postProcessProgram = { "src/shaders/fullscreen.vert" , "src/shaders/fullscreen.frag" };
 	shaderProgram.useProgram();
 
 	// Setup lighting
@@ -46,18 +48,50 @@ int main() {
 	Model::Model backpack = { "assets/backpack/backpack.obj", true };
 	Model::Model cup = { "assets/GlassCup/Cup_Made_By_Tyro_Smith.ply", false };
 
+	// Setup buffers
+	FrameBuffer frameBuffer = {};
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cerr << "Framebuffer not complete!" << std::endl;
+
+	// Fullscreen quad
+	float quadVertices[] = {
+		// positions // texCoords
+		-1.0f, 1.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, 1.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, -1.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 1.0f, 1.0f
+	};
+
+	unsigned int quadVAO, quadVBO;
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+	glBindVertexArray(0);
+
 
 	while (!glfwWindowShouldClose(Scene::mWindow))
 	{
 		if (glfwGetKey(Scene::mWindow, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(Scene::mWindow, true);
 		}
-
-		glClearColor(0.13f, 0.15f, 0.23f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		GUI::Begin();
 		shaderProgram.useProgram();
+
+		frameBuffer.bindFrameBuffer();
+		glClearColor(0.13f, 0.15f, 0.23f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
 
 		// Process lighting
 		int pointIndex = 0;
@@ -111,12 +145,23 @@ int main() {
 		shaderProgram.setMVP(modelMatrixCup, viewMatrix, projectionMatrix);
 		cup.drawModel(shaderProgram);
 
+		// Second pass
+		frameBuffer.unbindFrameBuffer();
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		postProcessProgram.useProgram();
+		glBindVertexArray(quadVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, frameBuffer.getTexture()); // your framebuffer color texture
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		GUI::Render(lightList);
 		GUI::End();
 		Scene::update();
 	}
 
+	frameBuffer.deleteRenderBuffer();
+	frameBuffer.deleteFrameBuffer();
 	GUI::Shutdown();
 	Scene::exit();
 }
