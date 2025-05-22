@@ -13,6 +13,7 @@
 #include "pointLight.h"
 #include "gui.h"
 #include "frameBuffer.h"
+#include "cubemap.h"
 
 void mouse_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -25,10 +26,9 @@ int main() {
 	GUI::Init();
 
 	// Setup Shaders
-	const std::string vertexShaderPath = "src/shaders/vertexShader.vert";
-	const std::string fragmentShaderPath = "src/shaders/phong.frag";
-	ShaderProgram shaderProgram = { vertexShaderPath , fragmentShaderPath };
-	ShaderProgram postProcessProgram = { "src/shaders/fullscreen.vert" , "src/shaders/fullscreen.frag" };
+	ShaderProgram shaderProgram = { "src/shaders/vertexShader.vert" , "src/shaders/phong.frag" };
+	ShaderProgram postProcessShader = { "src/shaders/fullscreen.vert" , "src/shaders/fullscreen.frag" };
+	ShaderProgram skyboxShader = { "src/shaders/skybox.vert" , "src/shaders/skybox.frag" };
 	shaderProgram.useProgram();
 
 	// Setup lighting
@@ -48,11 +48,83 @@ int main() {
 	Model::Model backpack = { "assets/backpack/backpack.obj", true };
 	Model::Model cup = { "assets/GlassCup/Cup_Made_By_Tyro_Smith.ply", false };
 
+	// Setup skybox
+	std::vector<std::string> faces =
+	{
+		"assets/skybox/right.jpg",
+		"assets/skybox/left.jpg",
+		"assets/skybox/top.jpg",
+		"assets/skybox/bottom.jpg",
+		"assets/skybox/front.jpg",
+		"assets/skybox/back.jpg",
+	};
+	CubeMap cubemap = {};
+	cubemap.loadTexture(faces, false);
+
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+	unsigned int skyboxVAO, skyboxVBO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+
+	glBindVertexArray(skyboxVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	glBindVertexArray(0);
+
+
 	// Setup buffers
-	FrameBuffer frameBuffer = {};
+	/*FrameBuffer frameBuffer = {};
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cerr << "Framebuffer not complete!" << std::endl;
-
+	*/
 	// Fullscreen quad
 	float quadVertices[] = {
 		// positions // texCoords
@@ -88,7 +160,7 @@ int main() {
 		GUI::Begin();
 		shaderProgram.useProgram();
 
-		frameBuffer.bindFrameBuffer();
+		//frameBuffer.bindFrameBuffer();
 		glClearColor(0.13f, 0.15f, 0.23f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
@@ -117,7 +189,18 @@ int main() {
 		// Process matrices and transformation
 		glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(WINDOW_WIDTH) / static_cast<float>(WINDOW_HEIGHT), 0.1f, 100.0f);
 		glm::mat4 viewMatrix = camera.getViewMatrix();
+		glm::mat4 skyboxView = glm::mat4(glm::mat3(camera.getViewMatrix()));
+		// Draw skybox
+		glDepthMask(GL_FALSE);
+		skyboxShader.useProgram();
+		skyboxShader.setUniformMat4(skyboxView, "view");
+		skyboxShader.setUniformMat4(projectionMatrix, "projection");
+		glBindVertexArray(skyboxVAO);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.getTextureId());
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDepthMask(GL_TRUE);
 
+		shaderProgram.useProgram();
 		// Draw backpack
 		glm::mat4 modelMatrixBackpack = glm::mat4(1.0f);
 		modelMatrixBackpack = glm::translate(modelMatrixBackpack, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -145,23 +228,24 @@ int main() {
 		shaderProgram.setMVP(modelMatrixCup, viewMatrix, projectionMatrix);
 		cup.drawModel(shaderProgram);
 
-		// Second pass
-		frameBuffer.unbindFrameBuffer();
+		// Post processing
+		/*frameBuffer.unbindFrameBuffer();
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		postProcessProgram.useProgram();
+		postProcessShader.useProgram();
 		glBindVertexArray(quadVAO);
 		glDisable(GL_DEPTH_TEST);
 		glBindTexture(GL_TEXTURE_2D, frameBuffer.getTexture()); // your framebuffer color texture
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		*/
 
 		GUI::Render(lightList);
 		GUI::End();
 		Scene::update();
 	}
 
-	frameBuffer.deleteRenderBuffer();
-	frameBuffer.deleteFrameBuffer();
+	//frameBuffer.deleteRenderBuffer();
+	//frameBuffer.deleteFrameBuffer();
 	GUI::Shutdown();
 	Scene::exit();
 }

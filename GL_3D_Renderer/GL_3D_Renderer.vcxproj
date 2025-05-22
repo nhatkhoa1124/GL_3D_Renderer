@@ -156,6 +156,7 @@
     <ClCompile Include="src\lighting\spotLight.cpp" />
     <ClCompile Include="src\model\mesh.cpp" />
     <ClCompile Include="src\model\model.cpp" />
+    <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\texture.cpp" />
     <ClCompile Include="src\shaderProgram.cpp" />
     <ClCompile Include="src\model\transform.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="src\lighting\spotLight.h" />
     <ClInclude Include="src\model\mesh.h" />
     <ClInclude Include="src\model\model.h" />
+    <ClInclude Include="src\resource\cubemap.h" />
     <ClInclude Include="src\resource\texture.h" />
     <ClInclude Include="src\shaderProgram.h" />
     <ClInclude Include="src\model\transform.h" />
@@ -194,6 +196,8 @@
     <None Include="src\shaders\fullscreen.frag" />
     <None Include="src\shaders\fullscreen.vert" />
     <None Include="src\shaders\phong.frag" />
+    <None Include="src\shaders\skybox.frag" />
+    <None Include="src\shaders\skybox.vert" />
     <None Include="src\shaders\transparencyTest.frag" />
     <None Include="src\shaders\vertexShader.vert" />
   </ItemGroup>
