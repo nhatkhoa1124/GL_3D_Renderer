@@ -1,4 +1,5 @@
 #include "vertexArray.h"
+#include "GLAD/glad.h"
 
 namespace Model {
 

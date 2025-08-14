@@ -8,7 +8,7 @@ SpotLight::SpotLight(const glm::vec3& position, const glm::vec3& spotDirection, 
 	mOuterCutOff{ outerCutOff }
 {
 	mType = LightType::SPOT;
-};
+}
 
 void SpotLight::setShaderLight(ShaderProgram& shader, const char* uniformName) const
 {
@@ -28,4 +28,4 @@ void SpotLight::setShaderLight(ShaderProgram& shader, const char* uniformName) c
 	shader.setUniformVec3(mSpotDirection, spotDirection.c_str());
 	shader.setUniformFloat(mInnerCutOff, innerCutOff.c_str());
 	shader.setUniformFloat(mOuterCutOff, outerCutOff.c_str());
-};
+}

@@ -153,13 +153,13 @@
     <ClCompile Include="src\GUI\modelGui.cpp" />
     <ClCompile Include="src\lighting\directionalLight.cpp" />
     <ClCompile Include="src\lighting\pointLight.cpp" />
+    <ClCompile Include="src\lighting\shadow.cpp" />
     <ClCompile Include="src\lighting\spotLight.cpp" />
     <ClCompile Include="src\model\mesh.cpp" />
     <ClCompile Include="src\model\model.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\texture.cpp" />
     <ClCompile Include="src\shaderProgram.cpp" />
-    <ClCompile Include="src\model\transform.cpp" />
     <ClCompile Include="src\vertex\vertexArray.cpp" />
     <ClCompile Include="src\vertex\vertexBuffer.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -179,23 +179,25 @@
     <ClInclude Include="src\lighting\directionalLight.h" />
     <ClInclude Include="src\lighting\light.h" />
     <ClInclude Include="src\lighting\pointLight.h" />
+    <ClInclude Include="src\lighting\shadow.h" />
     <ClInclude Include="src\lighting\spotLight.h" />
     <ClInclude Include="src\model\mesh.h" />
     <ClInclude Include="src\model\model.h" />
     <ClInclude Include="src\resource\cubemap.h" />
     <ClInclude Include="src\resource\texture.h" />
     <ClInclude Include="src\shaderProgram.h" />
-    <ClInclude Include="src\model\transform.h" />
     <ClInclude Include="src\vertex\vertex.h" />
     <ClInclude Include="src\vertex\vertexArray.h" />
     <ClInclude Include="src\vertex\vertexBuffer.h" />
     <ClInclude Include="src\scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\shaders\blankshader.frag" />
+    <None Include="src\shaders\blinnphong.frag" />
+    <None Include="src\shaders\depthmap.vert" />
     <None Include="src\shaders\fragmentShader.frag" />
     <None Include="src\shaders\fullscreen.frag" />
     <None Include="src\shaders\fullscreen.vert" />
-    <None Include="src\shaders\phong.frag" />
     <None Include="src\shaders\skybox.frag" />
     <None Include="src\shaders\skybox.vert" />
     <None Include="src\shaders\transparencyTest.frag" />

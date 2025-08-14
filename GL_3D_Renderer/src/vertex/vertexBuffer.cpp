@@ -1,4 +1,5 @@
 #include "vertexBuffer.h"
+#include "GLAD/glad.h"
 
 namespace Model {
 	VertexBuffer::VertexBuffer()

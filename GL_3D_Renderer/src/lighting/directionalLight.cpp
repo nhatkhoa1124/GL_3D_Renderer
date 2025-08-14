@@ -5,7 +5,7 @@ DirectionalLight::DirectionalLight(const glm::vec3 direction) :
 	mDirection{ direction }
 {
 	mType = LightType::DIRECTIONAL;
-};
+}
 
 void DirectionalLight::setShaderLight(ShaderProgram& shader, const char* uniformName) const
 {
@@ -19,4 +19,4 @@ void DirectionalLight::setShaderLight(ShaderProgram& shader, const char* uniform
 	shader.setUniformVec3(mColor, color.c_str());
 	//shader.setUniformFloat(mIntensity, intensity.c_str());
 	shader.setUniformVec3(mDirection, direction.c_str());
-};
+}

@@ -1,18 +1,20 @@
 #pragma once
 
-#include "core.h"
+#include <cstdint>
 #include <iostream>
+#include "glad/glad.h"
+#include "gtc/type_ptr.hpp"
 
 class ShaderProgram {
 public:
 	ShaderProgram(const std::string& vsPath, const std::string& fsPath);
 	~ShaderProgram() = default;
 	void useProgram();
-	inline GLuint getProgramId()  const { return mShaderId; };
+	inline uint32_t getProgramId()  const { return mShaderId; };
 
 	inline void setUniformInt(const int value, const char* uniformName) const
 	{
-		GLuint location = glGetUniformLocation(mShaderId, uniformName);
+		uint32_t location = glGetUniformLocation(mShaderId, uniformName);
 		if (location == (GLuint)-1) {
 			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
 			return;
@@ -30,7 +32,7 @@ public:
 	};
 	inline void setUniformMat4(const glm::mat4& value, const char* uniformName) const
 	{
-		GLuint location = glGetUniformLocation(mShaderId, uniformName);
+		uint32_t location = glGetUniformLocation(mShaderId, uniformName);
 		if (location == (GLuint)-1) {
 			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
 			return;
@@ -53,7 +55,7 @@ public:
 		setUniformMat4(projection, "projection");
 	};
 private:
-	GLuint mShaderId;
+	uint32_t mShaderId;
 
 	std::string loadShaderSource(const std::string& shaderPath);
 };

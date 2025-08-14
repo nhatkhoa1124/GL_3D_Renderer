@@ -9,8 +9,8 @@ namespace Model {
 		~VertexBuffer();
 		void bindVertexBuffer(const std::vector<VertexData>& vertices)const;
 		void deleteVertexBuffer()const;
-		inline GLuint getVertexBufferObject() const { return mVBO; };
+		inline uint32_t getVertexBufferObject() const { return mVBO; };
 	private:
-		GLuint mVBO;
+		uint32_t mVBO;
 	};
 }

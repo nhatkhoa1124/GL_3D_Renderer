@@ -8,7 +8,7 @@ PointLight::PointLight(const glm::vec3& position, const float constant, const fl
 	mQuadratic{ quadratic }
 {
 	mType = LightType::POINT;
-};
+}
 
 void PointLight::setShaderLight(ShaderProgram& shader, const char* uniformName) const
 {
@@ -28,4 +28,4 @@ void PointLight::setShaderLight(ShaderProgram& shader, const char* uniformName) 
 	shader.setUniformFloat(mConstant, constant.c_str());
 	shader.setUniformFloat(mLinear, linear.c_str());
 	shader.setUniformFloat(mQuadratic, quadratic.c_str());
-};
+}

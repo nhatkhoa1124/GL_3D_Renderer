@@ -3,6 +3,7 @@
 #include "vertex.h"
 #include "mesh.h"
 #include "assimp/scene.h"
+#include "glm.hpp"
 
 namespace Model {
 	class Model {
@@ -15,6 +16,8 @@ namespace Model {
 				mMeshes[i].drawMesh(shader);
 		};
 		inline void setFlipTexture(bool flip) { mFlipTexture = flip; };
+		inline void setModelMatrix(glm::mat4 model) { mModelMatrix = model; };
+		inline glm::mat4 getModelMatrix() const { return mModelMatrix; };
 	private:
 		std::vector<Mesh> mMeshes;
 		std::string mDirectory;
@@ -25,5 +28,7 @@ namespace Model {
 		void processNode(aiNode* node, const aiScene* scene);
 		Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 		std::vector<TextureData> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+
+		glm::mat4 mModelMatrix;
 	};
 }

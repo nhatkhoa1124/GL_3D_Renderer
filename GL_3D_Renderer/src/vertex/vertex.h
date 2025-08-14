@@ -1,6 +1,8 @@
 #pragma once
 
-#include "core.h"
+#include <string>
+#include <cstdint>
+#include "glm.hpp"
 
 namespace Model {
 
@@ -11,7 +13,7 @@ namespace Model {
 	};
 
 	struct TextureData {
-		GLuint id;
+		uint32_t id;
 		std::string type;
 		std::string path;
 	};

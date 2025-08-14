@@ -3,6 +3,7 @@
 
 #include "vertexArray.h"
 #include "vertexBuffer.h"
+#include <backends/imgui_impl_opengl3_loader.h>
 
 namespace Model {
 	Mesh::Mesh(std::vector<VertexData> vertices, std::vector<uint32_t> indices, std::vector<TextureData> textures) :

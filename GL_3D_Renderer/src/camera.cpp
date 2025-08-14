@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "core.h"
 #include "camera.h"
 
 

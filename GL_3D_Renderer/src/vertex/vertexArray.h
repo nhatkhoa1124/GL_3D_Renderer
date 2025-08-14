@@ -7,10 +7,10 @@ namespace Model {
 	public:
 		VertexArray();
 		~VertexArray();
-		void bindVertexArray(GLuint vbo) const;
+		void bindVertexArray(uint32_t vbo) const;
 		void deleteVertexArray() const;
-		inline GLuint getVertexArrayObject() const { return mVAO; };
+		inline uint32_t getVertexArrayObject() const { return mVAO; };
 	private:
-		GLuint mVAO;
+		uint32_t mVAO;
 	};
 }

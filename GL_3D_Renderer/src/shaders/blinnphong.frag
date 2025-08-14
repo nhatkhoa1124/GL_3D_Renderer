@@ -55,11 +55,17 @@ uniform PhongIntensity phongIntensity;
 vec3 texDiffuseValue = mix(texture(material.texture_diffuse1, TexCoord).rgb, texture(material.texture_diffuse2, TexCoord).rgb, 0.5f);
 vec3 texSpecularValue = mix(texture(material.texture_specular1, TexCoord).rgb, texture(material.texture_specular2, TexCoord).rgb, 0.5f);
 
+float calcShadow()
+{
+	return 1.0f;
+}
+
 vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shininess) {
 	vec3 lightDir = normalize(-light.direction);
 	float diff = max(dot(normal, lightDir), 0.0);
-	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+
+    vec3 halfway = normalize(lightDir + viewDir);
+	float spec = pow(max(dot(viewDir, halfway), 0.0), shininess);
 
 	vec3 ambient = vec3(0.05f) * light.color * texDiffuseValue;
 	vec3 diffuse = diff * vec3(0.4) * light.color * texDiffuseValue;
@@ -70,8 +76,9 @@ vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDir, float shininess) {
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float shininess) {
 	vec3 lightDir = normalize(light.position - fragPos);
 	float diff = max(dot(normal, lightDir), 0.0);
-	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+
+    vec3 halfway = normalize(lightDir + viewDir);
+	float spec = pow(max(dot(viewDir, halfway), 0.0), shininess);
 
 	// attenuation
 	float distance = length(light.position - fragPos);

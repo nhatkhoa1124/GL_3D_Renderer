@@ -33,9 +33,6 @@
     <ClCompile Include="src\shaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\model\transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\model\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,6 +90,9 @@
     <ClCompile Include="src\resource\cubemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\lighting\shadow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\scene.h">
@@ -108,9 +108,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\model\transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\shaderProgram.h">
@@ -167,16 +164,21 @@
     <ClInclude Include="src\resource\cubemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\lighting\shadow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\fragmentShader.frag" />
     <None Include="src\shaders\vertexShader.vert" />
-    <None Include="src\shaders\phong.frag" />
     <None Include="src\shaders\transparencyTest.frag" />
     <None Include="src\shaders\fullscreen.frag" />
     <None Include="src\shaders\fullscreen.vert" />
     <None Include="src\shaders\skybox.frag" />
     <None Include="src\shaders\skybox.vert" />
+    <None Include="src\shaders\blinnphong.frag" />
+    <None Include="src\shaders\depthmap.vert" />
+    <None Include="src\shaders\blankshader.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\cobblestone.png">

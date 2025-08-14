@@ -2,6 +2,7 @@
 
 #include "core.h"
 #include <iostream>
+#include <glad/glad.h>
 
 FrameBuffer::FrameBuffer()
 	: mFBO(0), mRBO(0), mTexBuffer(0)

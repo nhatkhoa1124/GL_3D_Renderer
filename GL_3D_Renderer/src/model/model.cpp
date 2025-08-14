@@ -1,9 +1,9 @@
 #include "model.h"
-#include "core.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "stb_image.h"
+#include <glad/glad.h>
 
 namespace Model {
 	void checkGLError(const char* functionName) {
@@ -55,7 +55,8 @@ namespace Model {
 	}
 
 	Model::Model(const std::string& path, bool flipTexture) :
-		mFlipTexture{ flipTexture }
+		mFlipTexture{ flipTexture },
+		mModelMatrix{}
 	{
 		std::cout << "Loading model from: " << path << std::endl;
 		loadModel(path);

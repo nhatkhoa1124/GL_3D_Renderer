@@ -5,9 +5,10 @@
 #include <vector>
 #include <memory>
 #include "light.h"
+#include "GLFW/glfw3.h"
 
 namespace GUI {
-	void Init();
+	void Init(GLFWwindow* window);
 	void Begin();
 	void End();
 	void Shutdown();

@@ -1,17 +1,8 @@
 #pragma once
-
-#define GLFW_INCLUDE_NONE
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <assimp/anim.h>
-
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
-
+#include <cstdint>
 #include <vector>
 #include <string>
+#include <memory>
 
-constexpr GLint WINDOW_WIDTH = 1280;
-constexpr GLint WINDOW_HEIGHT = 720;
+constexpr uint32_t WINDOW_WIDTH = 1280;
+constexpr uint32_t WINDOW_HEIGHT = 720;
