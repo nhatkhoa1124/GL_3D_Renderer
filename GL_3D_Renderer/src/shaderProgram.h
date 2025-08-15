@@ -16,7 +16,7 @@ public:
 	{
 		uint32_t location = glGetUniformLocation(mShaderId, uniformName);
 		if (location == (GLuint)-1) {
-			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
+			//std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
 			return;
 		}
 		glUniform1i(location, value);
@@ -25,7 +25,7 @@ public:
 	{
 		GLuint location = glGetUniformLocation(mShaderId, uniformName);
 		if (location == (GLuint)-1) {
-			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
+			//std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
 			return;
 		}
 		glUniform1f(location, value);
@@ -34,7 +34,7 @@ public:
 	{
 		uint32_t location = glGetUniformLocation(mShaderId, uniformName);
 		if (location == (GLuint)-1) {
-			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
+			//std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
 			return;
 		}
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
@@ -43,7 +43,7 @@ public:
 	{
 		GLuint location = glGetUniformLocation(mShaderId, uniformName);
 		if (location == (GLuint)-1) {
-			std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
+			//std::cerr << "WARNING: UNIFORM'" << uniformName << "' NOT FOUND IN SHADER" << std::endl;
 			return;
 		}
 		glUniform3fv(location, 1, glm::value_ptr(value));

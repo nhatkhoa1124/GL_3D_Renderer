@@ -40,7 +40,7 @@ namespace SceneManager {
 		mModelList{}
 	{
 		mLightList.reserve(3);
-		mModelList.reserve(24);
+		mModelList.reserve(8);
 	}
 
 	Scene::~Scene()
@@ -65,6 +65,7 @@ namespace SceneManager {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_SAMPLES, 4);
 		mWindow = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "3d_Renderer", nullptr, nullptr);
 		if (mWindow == nullptr) {
 			std::cerr << "FAILED TO CREATE WINDOW\n";
@@ -74,8 +75,6 @@ namespace SceneManager {
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			std::cerr << "FAILED TO INITIALIZE GLAD\n";
 		}
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
 
 		glfwSetWindowUserPointer(mWindow, this);
 		glfwSetCursorPosCallback(mWindow, &Scene::staticMouseCallback);
@@ -98,10 +97,10 @@ namespace SceneManager {
 		// Setup model matrix for each models
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -5.0f, -4.0f));
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f));
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.12f, 0.057f, 0.11f));
 		table.setModelMatrix(modelMatrix);
 		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 3.0f, -4.0f));
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 3.0f, 0.0f));
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f, 0.1f, 0.1f));
 		dragon.setModelMatrix(modelMatrix);
@@ -110,7 +109,7 @@ namespace SceneManager {
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(1.0f, 1.0f, 1.0f));
 		backpack.setModelMatrix(modelMatrix);
 		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -2.0f, 2.0f));
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -2.0f, 4.0f));
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.3f, 0.3f, 0.3f));
 		cup.setModelMatrix(modelMatrix);
@@ -136,34 +135,9 @@ namespace SceneManager {
 
 	void Scene::renderScene(ShaderProgram& shader)
 	{
-		shader.useProgram();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Process lighting
-		int pointIndex = 0;
-		for (auto& light : mLightList) {
-			LightType type = light->getLightType();
-
-			if (type == LightType::DIRECTIONAL) {
-				light->setShaderLight(shader, "dirLight");
-			}
-			else if (type == LightType::POINT) {
-				// Count how many point lights rendered so far
-				std::string name = "pointLight[" + std::to_string(pointIndex++) + "]";
-				light->setShaderLight(shader, name.c_str());
-			}
-		}
-		shader.setUniformVec3(mCamera.getPos(), "viewPos");
-		shader.setUniformVec3(glm::vec3(0.05f), "phongIntensity.ambient");
-		shader.setUniformVec3(glm::vec3(0.8f), "phongIntensity.diffuse");
-		shader.setUniformVec3(glm::vec3(1.0f), "phongIntensity.specular");
-		// Process camera
-		mCamera.processKeyboard(Scene::mWindow, mDeltaTime);
-		// Define view matrix
-		glm::mat4 viewMatrix = mCamera.getViewMatrix();
-		// Draw models
 		for (const auto& m : mModelList)
 		{
-			shader.setMVP(m.getModelMatrix(), viewMatrix, mCameraProjection);
+			shader.setMVP(m.getModelMatrix(), mCamera.getViewMatrix(), mCameraProjection);
 			m.drawModel(shader);
 		}
 	}
@@ -180,12 +154,29 @@ namespace SceneManager {
 		glDepthFunc(GL_LESS);
 	}
 
+	void Scene::renderDepthMap(ShaderProgram& shader)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, mShadow.getFramebuffer());
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glCullFace(GL_FRONT);
+		renderScene(shader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void Scene::update() {
 		// Setup
 		ShaderProgram sceneShader = { "src/shaders/vertexShader.vert" , "src/shaders/blinnphong.frag" };
-		ShaderProgram postProcessShader = { "src/shaders/fullscreen.vert" , "src/shaders/fullscreen.frag" };
 		ShaderProgram skyboxShader = { "src/shaders/skybox.vert" , "src/shaders/skybox.frag" };
 		ShaderProgram depthMapShader = { "src/shaders/depthmap.vert", "src/shaders/blankshader.frag" };
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_MULTISAMPLE);
+		//glEnable(GL_FRAMEBUFFER_SRGB);
+
+		// Define light view's near & far plane
+		float near = 1.0f, far = 30.0f;
 
 		// Render
 		while (!glfwWindowShouldClose(Scene::mWindow))
@@ -195,6 +186,51 @@ namespace SceneManager {
 			}
 			GUI::Begin();
 
+			// --Render depth map
+			glm::mat4 lightProjection = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, near, far);
+			glm::mat4 lightView = glm::lookAt
+			(
+				glm::vec3(0.0f, 5.0f, 5.0f), // Position of light = -lightDir * distance
+				glm::vec3(0.0f),
+				glm::vec3(0.0f, 1.0f, 0.0f)
+			);
+			glm::mat4 lightMatrix = lightProjection * lightView;
+			depthMapShader.useProgram();
+			depthMapShader.setUniformMat4(lightMatrix, "lightMatrix");
+			glViewport(0, 0, mShadow.getWidth(), mShadow.getHeight());
+			renderDepthMap(depthMapShader);
+
+			// --Render main scene
+			glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+			sceneShader.useProgram();
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			// Process camera
+			mCamera.processKeyboard(Scene::mWindow, mDeltaTime);
+			// Define view matrix
+			glm::mat4 viewMatrix = mCamera.getViewMatrix();
+			// Process lighting
+			int pointIndex = 0;
+			for (auto& light : mLightList) {
+				LightType type = light->getLightType();
+
+				if (type == LightType::DIRECTIONAL) {
+					light->setShaderLight(sceneShader, "dirLight");
+				}
+				else if (type == LightType::POINT) {
+					// Count how many point lights rendered so far
+					std::string name = "pointLight[" + std::to_string(pointIndex++) + "]";
+					light->setShaderLight(sceneShader, name.c_str());
+				}
+			}
+			sceneShader.setUniformVec3(mCamera.getPos(), "viewPos");
+			sceneShader.setUniformVec3(glm::vec3(0.02f), "phongIntensity.ambient");
+			sceneShader.setUniformVec3(glm::vec3(0.5f), "phongIntensity.diffuse");
+			sceneShader.setUniformVec3(glm::vec3(1.0f), "phongIntensity.specular");
+			sceneShader.setUniformMat4(lightMatrix, "lightMatrix");
+
+			sceneShader.setUniformInt(8, "shadowMap");
+			glActiveTexture(GL_TEXTURE8);
+			glBindTexture(GL_TEXTURE_2D, mShadow.getDepthmap());
 			renderScene(sceneShader);
 			renderSkybox(skyboxShader);
 

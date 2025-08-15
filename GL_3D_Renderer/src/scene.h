@@ -28,6 +28,7 @@ namespace SceneManager {
 		void setupScene();
 		void renderScene(ShaderProgram& shader);
 		void renderSkybox(ShaderProgram& shader);
+		void renderDepthMap(ShaderProgram& shader);
 
 		static void staticMouseCallback(GLFWwindow* window, double xpos, double ypos);
 		void instanceMouseCallback(double xpos, double ypos);
