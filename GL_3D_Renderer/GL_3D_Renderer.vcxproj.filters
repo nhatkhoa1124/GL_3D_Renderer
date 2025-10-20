@@ -93,6 +93,9 @@
     <ClCompile Include="src\lighting\shadow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\lighting\shadowCubeMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\scene.h">
@@ -167,6 +170,9 @@
     <ClInclude Include="src\lighting\shadow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\lighting\shadowCubeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\fragmentShader.frag" />
@@ -179,6 +185,7 @@
     <None Include="src\shaders\blinnphong.frag" />
     <None Include="src\shaders\depthmap.vert" />
     <None Include="src\shaders\blankshader.frag" />
+    <None Include="src\shaders\point_shadow.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\cobblestone.png">

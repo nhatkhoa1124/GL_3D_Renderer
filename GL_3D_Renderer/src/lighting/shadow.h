@@ -15,7 +15,6 @@ public:
 	Shadow();
 
 	void init();
-	void drawDepthMap();
 	int getWidth() const { return SHADOW_WIDTH; };
 	int getHeight() const { return SHADOW_HEIGHT; };
 	uint32_t getFramebuffer() const { return mFBO; };

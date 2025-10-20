@@ -10,7 +10,7 @@ namespace Model {
 
 	VertexArray::~VertexArray() {}
 
-	void VertexArray::bindVertexArray(GLuint vbo) const
+	void VertexArray::bindVertexArray(uint32_t vbo) const
 	{
 		glBindVertexArray(mVAO);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);

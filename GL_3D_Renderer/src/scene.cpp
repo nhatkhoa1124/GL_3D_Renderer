@@ -13,11 +13,8 @@
 #include "model.h"
 #include "stb_image.h"
 #include "directionalLight.h"
-#include "pointLight.h"
 #include "frameBuffer.h"
 #include "cubemap.h"
-#include "shadow.h"
-
 
 namespace SceneManager {
 	Scene::Scene() :
@@ -26,6 +23,7 @@ namespace SceneManager {
 		mCamera{ Camera{glm::vec3(0.0f, 0.0f, 6.0f)} },
 		mSkybox{},
 		mShadow{},
+		mPointShadow{},
 		mCameraProjection
 		{
 			glm::perspective
@@ -85,11 +83,86 @@ namespace SceneManager {
 
 	void Scene::setupScene()
 	{
-		// Setup lighting
-		mLightList.push_back(std::make_unique<DirectionalLight>(glm::vec3(0.0f, -1.0f, -1.0f)));
-		mLightList.push_back(std::make_unique<PointLight>(glm::vec3(1.0f, 6.0f, 0.0f), 1.0f, 0.045f, 0.0075f));
-		mLightList.push_back(std::make_unique<PointLight>(glm::vec3(0.0f, 0.0f, 2.0f), 1.0f, 0.045f, 0.0075f));
-		// Load model
+		CreateLighting();
+		LoadModel();
+		// Setup skybox
+		std::vector<std::string> faces =
+		{
+			"assets/skybox/right.jpg",
+			"assets/skybox/left.jpg",
+			"assets/skybox/top.jpg",
+			"assets/skybox/bottom.jpg",
+			"assets/skybox/front.jpg",
+			"assets/skybox/back.jpg",
+		};
+		mSkybox.loadTexture(faces, false);
+		// Setup shadow
+		mShadow.init();
+		mPointShadow.init();
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_MULTISAMPLE);
+		//glEnable(GL_FRAMEBUFFER_SRGB); // Gamma correction
+	}
+
+	void Scene::renderScene(ShaderProgram& shader)
+	{
+		for (const auto& m : mModelList)
+		{
+			shader.setMVP(m.getModelMatrix(), mCamera.getViewMatrix(), mCameraProjection);
+			m.drawModel(shader);
+		}
+	}
+
+	void Scene::renderSkybox(ShaderProgram& skyboxShader)
+	{
+		glDepthFunc(GL_LEQUAL);
+		glm::mat4 skyboxView = glm::mat4(glm::mat3(mCamera.getViewMatrix()));
+		skyboxShader.useProgram();
+		skyboxShader.setUniformMat4(skyboxView, "view");
+		skyboxShader.setUniformMat4(mCameraProjection, "projection");
+		mSkybox.drawCube();
+		glDepthFunc(GL_LESS);
+	}
+
+	void Scene::renderDepthMap(ShaderProgram& depthMapShader)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, mShadow.getFramebuffer());
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glCullFace(GL_FRONT);
+		renderScene(depthMapShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void Scene::renderCubeDepthMap(ShaderProgram& cubeDepthMapShader, PointLight* pointLight)
+	{
+		if (!pointLight) return;
+		mPointShadow.setLightPosition(pointLight->getPosition());
+
+		auto shadowTransforms = mPointShadow.getShadowTransforms();
+		int shadowSize = mPointShadow.getShadowSize();
+		glViewport(0, 0, shadowSize, shadowSize);
+		glBindFramebuffer(GL_FRAMEBUFFER, mPointShadow.getFrameBuffer());
+		glClear(GL_DEPTH_BUFFER_BIT);
+		cubeDepthMapShader.useProgram();
+		for (int i = 0; i < 6; i++)
+		{
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				mPointShadow.getDepthMap(), 0);
+			cubeDepthMapShader.setUniformMat4(shadowTransforms[i], "shadowMatrix");
+
+		}
+		cubeDepthMapShader.setUniformVec3(pointLight->getPosition(), "lightPos");
+		cubeDepthMapShader.setUniformFloat(mPointShadow.getFarPlane(), "farPlane");
+		renderScene(cubeDepthMapShader);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void Scene::LoadModel()
+	{
 		Model::Model table = { "assets/table/table.obj", true };
 		Model::Model dragon = { "assets/fbx/Dragon 2.5_fbx.fbx", false };
 		Model::Model backpack = { "assets/backpack/backpack.obj", true };
@@ -118,50 +191,12 @@ namespace SceneManager {
 		mModelList.push_back(dragon);
 		mModelList.push_back(backpack);
 		mModelList.push_back(cup);
-		// Setup skybox
-		std::vector<std::string> faces =
-		{
-			"assets/skybox/right.jpg",
-			"assets/skybox/left.jpg",
-			"assets/skybox/top.jpg",
-			"assets/skybox/bottom.jpg",
-			"assets/skybox/front.jpg",
-			"assets/skybox/back.jpg",
-		};
-		mSkybox.loadTexture(faces, false);
-		// Setup shadow
-		mShadow.init();
 	}
 
-	void Scene::renderScene(ShaderProgram& shader)
+	void Scene::CreateLighting()
 	{
-		for (const auto& m : mModelList)
-		{
-			shader.setMVP(m.getModelMatrix(), mCamera.getViewMatrix(), mCameraProjection);
-			m.drawModel(shader);
-		}
-	}
-
-	void Scene::renderSkybox(ShaderProgram& shader)
-	{
-
-		glDepthFunc(GL_LEQUAL);
-		glm::mat4 skyboxView = glm::mat4(glm::mat3(mCamera.getViewMatrix()));
-		shader.useProgram();
-		shader.setUniformMat4(skyboxView, "view");
-		shader.setUniformMat4(mCameraProjection, "projection");
-		mSkybox.drawCube();
-		glDepthFunc(GL_LESS);
-	}
-
-	void Scene::renderDepthMap(ShaderProgram& shader)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, mShadow.getFramebuffer());
-		glClear(GL_DEPTH_BUFFER_BIT);
-		glCullFace(GL_FRONT);
-		renderScene(shader);
-		glCullFace(GL_BACK);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		mLightList.push_back(std::make_unique<DirectionalLight>(glm::vec3(0.0f, -1.0f, -1.0f)));
+		//mLightList.push_back(std::make_unique<PointLight>(glm::vec3(0.0f, 0.5f, 1.4f), 1.0f, 0.09f, 0.002f));
 	}
 
 	void Scene::update() {
@@ -169,14 +204,10 @@ namespace SceneManager {
 		ShaderProgram sceneShader = { "src/shaders/vertexShader.vert" , "src/shaders/blinnphong.frag" };
 		ShaderProgram skyboxShader = { "src/shaders/skybox.vert" , "src/shaders/skybox.frag" };
 		ShaderProgram depthMapShader = { "src/shaders/depthmap.vert", "src/shaders/blankshader.frag" };
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_MULTISAMPLE);
-		//glEnable(GL_FRAMEBUFFER_SRGB);
+		ShaderProgram pointShadowShader = { "src/shaders/point_shadow.vert", "src/shaders/blankshader.frag" };
 
 		// Define light view's near & far plane
-		float near = 1.0f, far = 30.0f;
+		float near = 1.0f, far = 25.0f;
 
 		// Render
 		while (!glfwWindowShouldClose(Scene::mWindow))
@@ -186,7 +217,7 @@ namespace SceneManager {
 			}
 			GUI::Begin();
 
-			// --Render depth map
+			// --Render depth map & shadow
 			glm::mat4 lightProjection = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, near, far);
 			glm::mat4 lightView = glm::lookAt
 			(
@@ -198,7 +229,16 @@ namespace SceneManager {
 			depthMapShader.useProgram();
 			depthMapShader.setUniformMat4(lightMatrix, "lightMatrix");
 			glViewport(0, 0, mShadow.getWidth(), mShadow.getHeight());
-			renderDepthMap(depthMapShader);
+			renderDepthMap(depthMapShader); // Create depth map
+			// Create Cube depth map
+			int pointLightIndex = 0;
+			for (auto& light : mLightList) {
+				if (light->getLightType() == LightType::POINT) {
+					PointLight* pointLight = dynamic_cast<PointLight*>(light.get());
+					renderCubeDepthMap(pointShadowShader, pointLight);
+					pointLightIndex++;
+				}
+			}
 
 			// --Render main scene
 			glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -231,6 +271,11 @@ namespace SceneManager {
 			sceneShader.setUniformInt(8, "shadowMap");
 			glActiveTexture(GL_TEXTURE8);
 			glBindTexture(GL_TEXTURE_2D, mShadow.getDepthmap());
+			sceneShader.setUniformInt(9, "pointShadowMap");
+			glActiveTexture(GL_TEXTURE9);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, mPointShadow.getDepthMap());
+			sceneShader.setUniformFloat(mPointShadow.getFarPlane(), "farPlane");
+
 			renderScene(sceneShader);
 			renderSkybox(skyboxShader);
 

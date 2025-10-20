@@ -154,6 +154,7 @@
     <ClCompile Include="src\lighting\directionalLight.cpp" />
     <ClCompile Include="src\lighting\pointLight.cpp" />
     <ClCompile Include="src\lighting\shadow.cpp" />
+    <ClCompile Include="src\lighting\shadowCubeMap.cpp" />
     <ClCompile Include="src\lighting\spotLight.cpp" />
     <ClCompile Include="src\model\mesh.cpp" />
     <ClCompile Include="src\model\model.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="src\lighting\light.h" />
     <ClInclude Include="src\lighting\pointLight.h" />
     <ClInclude Include="src\lighting\shadow.h" />
+    <ClInclude Include="src\lighting\shadowCubeMap.h" />
     <ClInclude Include="src\lighting\spotLight.h" />
     <ClInclude Include="src\model\mesh.h" />
     <ClInclude Include="src\model\model.h" />
@@ -198,6 +200,7 @@
     <None Include="src\shaders\fragmentShader.frag" />
     <None Include="src\shaders\fullscreen.frag" />
     <None Include="src\shaders\fullscreen.vert" />
+    <None Include="src\shaders\point_shadow.vert" />
     <None Include="src\shaders\skybox.frag" />
     <None Include="src\shaders\skybox.vert" />
     <None Include="src\shaders\transparencyTest.frag" />

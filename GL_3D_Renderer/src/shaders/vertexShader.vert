@@ -19,7 +19,7 @@ uniform mat4 lightMatrix;
 void main()
 {
     vs_out.FragPos = vec3(model *vec4(aPos,1.0));
-    vs_out.Normal = aNormal;
+    vs_out.Normal = mat3(transpose(inverse(model))) * aNormal;
     vs_out.TexCoords = aTexCoord;
     vs_out.FragPosLightSpace = lightMatrix * vec4(vs_out.FragPos, 1.0);
     gl_Position = projection * view * vec4(vs_out.FragPos, 1.0);
