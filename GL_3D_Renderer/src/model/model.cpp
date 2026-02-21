@@ -182,6 +182,7 @@ namespace Model {
 		{
 			aiString str;
 			mat->GetTexture(type, i, &str);
+
 			bool skip = false;
 			for (uint32_t j = 0; j < mTexturesLoaded.size(); j++)
 			{

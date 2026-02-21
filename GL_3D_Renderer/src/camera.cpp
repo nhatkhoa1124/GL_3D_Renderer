@@ -1,15 +1,13 @@
 #include <iostream>
-
 #include "camera.h"
-
 
 Camera::Camera(glm::vec3 startPos) :
 	mPos{ startPos },
 	worldUp{ glm::vec3(0.0f, 1.0f, 0.0f) },
 	mYaw{ -90.0f },
 	mPitch{ 0.0f },
-	mMoveSpeed{ 4.0f },
-	mMouseSens{ 0.12f },
+	mMoveSpeed{ 7.0f },
+	mMouseSens{ 0.3f },
 	mUp{ glm::vec3(0.0f, 1.0f, 0.0f) },
 	mFront{ glm::vec3(0.0f, 0.0f, -1.0f) },
 	mRight{ glm::vec3(1.0f, 0.0f, 0.0f) }

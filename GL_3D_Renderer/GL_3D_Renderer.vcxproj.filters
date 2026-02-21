@@ -186,6 +186,9 @@
     <None Include="src\shaders\depthmap.vert" />
     <None Include="src\shaders\blankshader.frag" />
     <None Include="src\shaders\point_shadow.vert" />
+    <None Include="GL_3D_Renderer.exe" />
+    <None Include="assimp-vc143-mtd.dll" />
+    <None Include="imgui.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\cobblestone.png">

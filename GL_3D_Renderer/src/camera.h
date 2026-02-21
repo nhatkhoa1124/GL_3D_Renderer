@@ -4,7 +4,6 @@
 #include <gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-
 class Camera {
 public:
 	Camera(glm::vec3 startPos);

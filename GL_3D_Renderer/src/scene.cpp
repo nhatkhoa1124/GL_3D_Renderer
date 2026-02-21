@@ -64,6 +64,7 @@ namespace SceneManager {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 		mWindow = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "3d_Renderer", nullptr, nullptr);
 		if (mWindow == nullptr) {
 			std::cerr << "FAILED TO CREATE WINDOW\n";
@@ -163,40 +164,35 @@ namespace SceneManager {
 
 	void Scene::LoadModel()
 	{
-		Model::Model table = { "assets/table/table.obj", true };
-		Model::Model dragon = { "assets/fbx/Dragon 2.5_fbx.fbx", false };
-		Model::Model backpack = { "assets/backpack/backpack.obj", true };
-		Model::Model cup = { "assets/GlassCup/Cup_Made_By_Tyro_Smith.ply", false };
+		Model::Model priestess = { "assets/altan_avian_priestess/scene.gltf", false };
+		Model::Model chinese_statue = { "assets/funny_chinese_statue/scene.gltf", false };
+		Model::Model table = {"assets/a_table/scene.gltf", false};
+		
 		// Setup model matrix for each models
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -5.0f, -4.0f));
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.12f, 0.057f, 0.11f));
-		table.setModelMatrix(modelMatrix);
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, 1.53f, -4.0f));
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(2.3f, 2.3f, 2.3f));
+		priestess.setModelMatrix(modelMatrix);
+		
 		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 3.0f, 0.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f, 0.1f, 0.1f));
-		dragon.setModelMatrix(modelMatrix);
-		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(1.0f, 1.0f, 1.0f));
-		backpack.setModelMatrix(modelMatrix);
-		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -2.0f, 4.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.3f, 0.3f, 0.3f));
-		cup.setModelMatrix(modelMatrix);
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(3.0f, -0.56f, -2.0f));
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.015f, 0.015f, 0.015f));
+		chinese_statue.setModelMatrix(modelMatrix);
 
+		modelMatrix = glm::mat4(1.0f);
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -10.0f, -3.0f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		table.setModelMatrix(modelMatrix);
+
+		mModelList.push_back(priestess);
+		mModelList.push_back(chinese_statue);
 		mModelList.push_back(table);
-		mModelList.push_back(dragon);
-		mModelList.push_back(backpack);
-		mModelList.push_back(cup);
 	}
 
 	void Scene::CreateLighting()
 	{
 		mLightList.push_back(std::make_unique<DirectionalLight>(glm::vec3(0.0f, -1.0f, -1.0f)));
-		//mLightList.push_back(std::make_unique<PointLight>(glm::vec3(0.0f, 0.5f, 1.4f), 1.0f, 0.09f, 0.002f));
+		mLightList.push_back(std::make_unique<PointLight>(glm::vec3(0.0f, 5.3f, 0.4f), 1.0f, 0.007f, 0.0002f));
 	}
 
 	void Scene::update() {
@@ -212,6 +208,17 @@ namespace SceneManager {
 		// Render
 		while (!glfwWindowShouldClose(Scene::mWindow))
 		{
+			int width, height;
+			glfwGetFramebufferSize(mWindow, &width, &height);
+			if (height > 0) { // Prevent division by zero if window is minimized
+				mCameraProjection = glm::perspective(
+					glm::radians(45.0f),
+					static_cast<float>(width) / static_cast<float>(height),
+					0.1f,
+					100.0f
+				);
+			}
+
 			if (glfwGetKey(Scene::mWindow, GLFW_KEY_ESCAPE)) {
 				glfwSetWindowShouldClose(Scene::mWindow, true);
 			}
@@ -263,7 +270,7 @@ namespace SceneManager {
 				}
 			}
 			sceneShader.setUniformVec3(mCamera.getPos(), "viewPos");
-			sceneShader.setUniformVec3(glm::vec3(0.02f), "phongIntensity.ambient");
+			sceneShader.setUniformVec3(glm::vec3(0.03f), "phongIntensity.ambient");
 			sceneShader.setUniformVec3(glm::vec3(0.5f), "phongIntensity.diffuse");
 			sceneShader.setUniformVec3(glm::vec3(1.0f), "phongIntensity.specular");
 			sceneShader.setUniformMat4(lightMatrix, "lightMatrix");

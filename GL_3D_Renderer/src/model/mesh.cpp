@@ -1,6 +1,5 @@
 #include "mesh.h"
 #include "core.h"
-
 #include "vertexArray.h"
 #include "vertexBuffer.h"
 #include <backends/imgui_impl_opengl3_loader.h>
@@ -14,30 +13,42 @@ namespace Model {
 		setupMesh();
 	}
 
-	void Mesh::drawMesh(const ShaderProgram& shader) const
-	{
-		uint32_t diffuseNr = 1;
-		uint32_t specularNr = 1;
-		for (uint32_t i = 0; i < mTextures.size(); i++) {
-			glActiveTexture(GL_TEXTURE0 + i);
-			std::string number;
-			std::string name = mTextures[i].type;
-			if (name == "texture_diffuse") {
-				number = std::to_string(diffuseNr++);
-			}
-			else if (name == "texture_specular") {
-				number = std::to_string(specularNr++);
-			}
-			shader.setUniformInt(i, ("material." + name + number).c_str());
-			glBindTexture(GL_TEXTURE_2D, mTextures[i].id);
-		}
-		glActiveTexture(GL_TEXTURE0);
+    void Mesh::drawMesh(const ShaderProgram& shader) const
+    {
+        if (mTextures.empty()) {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
+        else {
+            uint32_t diffuseNr = 1;
+            uint32_t specularNr = 1;
 
-		// Draw mesh
-		glBindVertexArray(mVAO);
-		glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-	}
+            for (uint32_t i = 0; i < mTextures.size(); i++) {
+                glActiveTexture(GL_TEXTURE0 + i);
+                std::string number;
+                std::string name = mTextures[i].type;
+                if (name == "texture_diffuse") {
+                    number = std::to_string(diffuseNr++);
+                }
+                else if (name == "texture_specular") {
+                    number = std::to_string(specularNr++);
+                }
+
+                shader.setUniformInt(i, ("material." + name + number).c_str());
+                glBindTexture(GL_TEXTURE_2D, mTextures[i].id);
+            }
+        }
+
+        glBindVertexArray(mVAO);
+        glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+
+        for (uint32_t i = 0; i < mTextures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
+        glActiveTexture(GL_TEXTURE0);
+    }
 
 	void Mesh::setupMesh()
 	{

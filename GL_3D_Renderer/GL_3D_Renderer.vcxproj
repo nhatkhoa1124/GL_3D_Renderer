@@ -194,6 +194,9 @@
     <ClInclude Include="src\scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assimp-vc143-mtd.dll" />
+    <None Include="GL_3D_Renderer.exe" />
+    <None Include="imgui.ini" />
     <None Include="src\shaders\blankshader.frag" />
     <None Include="src\shaders\blinnphong.frag" />
     <None Include="src\shaders\depthmap.vert" />
